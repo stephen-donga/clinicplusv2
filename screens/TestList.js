@@ -66,7 +66,7 @@ const TestList = ({currentUser,pendingTests,testList,navigation}) => {
                    >
                            <View style={{width:'95%',height:50,elevation:3,backgroundColor:'#fff', borderRadius:0,marginVertical:5,padding:5, flexDirection:'row', alignSelf:'center'}}>
                                <View style={{width:'70%',justifyContent:'center',paddingLeft:10}}>
-                                   <Text style={{fontSize:15}}>{capitalize(item.patient)}</Text>
+                                   <Text style={{fontSize:15}}>{capitalize(item.patient.toLowerCase())}</Text>
                                </View>
                            </View>
                    </TouchableOpacity>
