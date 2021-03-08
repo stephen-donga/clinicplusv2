@@ -80,7 +80,7 @@ const Login = ({setLoggedInUser,navigation}) => {
                 setPassword("")
                 setEmailErrorMessage("")
                 setPasswordErrorMessage("")
-            },1000)
+            },2000)
 
         }else{
             setIsModalVisible(true)
@@ -110,6 +110,7 @@ const Login = ({setLoggedInUser,navigation}) => {
                   <TextInput
                     placeholder='Password'
                     value={password}
+                    secureTextEntry={true}
                     onChangeText={handlePasswordChange}
                     style={{width:'70%',borderWidth:1,borderRadius:30,paddingHorizontal:25,backgroundColor:'#eee',alignSelf:'center',margin:15}}
                     />

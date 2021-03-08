@@ -1,11 +1,15 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect, useRef} from 'react'
 import { View,Text,FlatList, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import {connect} from 'react-redux'
 import {setTestList} from '../redux/tests/testAction'
+import {setCurrentUser} from '../redux/user/userActions'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Loading from 'react-native-whc-loading'
 
 
-const TestList = ({currentUser,pendingTests,testList,navigation}) => {
+
+const TestList = ({currentUser,setUser,pendingTests,testList,navigation}) => {
 
     const [tests, setTests] = useState([])
 
@@ -15,6 +19,7 @@ const TestList = ({currentUser,pendingTests,testList,navigation}) => {
 
     const id = currentUser.user_id;
 
+    const loading = useRef(null)
  
 
     useEffect(() => {
@@ -36,13 +41,32 @@ const TestList = ({currentUser,pendingTests,testList,navigation}) => {
             .catch(err => console.log(err))
     }, [])
 
+    const logOut =()=>{
+        loading.current.show()
+        setTimeout(()=>{
+            setUser({})
+            loading.current.close()
+            navigation.navigate('Login')
+
+        },1000)
+    }
     
     return (
         <View style={{flex:1, backgroundColor:'#fff'}}>
-            <View style={{width:'100%',height:40, backgroundColor:'#92D1C6',justifyContent:'center'}}>
-                <Text style={{fontSize:14,marginLeft:10,color:'#10093E'}}>{currentUser.name}</Text>
+            <View style={{width:'100%',height:50, backgroundColor:'#92D1C6',justifyContent:'center'}}>
+                <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',paddingHorizontal:5,paddingVertical:5}}>
+                <Text style={{fontSize:15,marginLeft:10,color:'#10093E'}}>{currentUser.name}</Text>
+                <TouchableOpacity 
+                onPress={logOut}
+                style={{width:30,height:30,borderRadius:15,backgroundColor:'#D83972',alignItems:'center',justifyContent:'center'}}
+                >
+                    <AntDesign name='logout'color='#fff' size={20} />
+                </TouchableOpacity>
+
+                </View>
 
             </View>
+            <Loading ref={loading}/>
             <Text style={{margin:10,fontSize:17,fontWeight:'bold',color:'#10093E'}}>Pending Tests</Text>
             {
                 tests.length < 1 ? 
@@ -84,7 +108,8 @@ const mapStateToProps = ({user,test})=>({
 })
 
 const mapDispatchToProps = dispatch =>({
-    pendingTests: list =>dispatch(setTestList(list))
+    pendingTests: list =>dispatch(setTestList(list)),
+    setUser: action =>dispatch(setCurrentUser(action))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TestList)

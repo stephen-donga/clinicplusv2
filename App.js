@@ -16,14 +16,12 @@ import {Store} from './redux/index'
 
 import {NavigationContainer} from '@react-navigation/native'
 import StackNavigation from './navigation/StackNavigation'
-import TryDropDown from './tryDropDown'
  
 
 const App = () => {
   return (
     <>
     
-            {/* <TryDropDown /> */}
       <Provider store={Store}>
       <StatusBar barStyle="light-content" backgroundColor="#92C1C2" />
       
