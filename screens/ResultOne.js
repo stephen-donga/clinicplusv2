@@ -1,6 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import { View,ScrollView,Picker,Dimensions,ToastAndroid,TouchableOpacity,TextInput, Text } from 'react-native'
 import {connect} from 'react-redux'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
 const window = Dimensions.get('window')
@@ -29,6 +30,14 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
         );
       };
 
+      const showEmptyMsg = () => {
+        ToastAndroid.showWithGravity(
+          "Please ! select result and Technician",
+          ToastAndroid.BOTTOM,
+          ToastAndroid.BOTTOM
+        );
+      };
+
     const [resultOptions, setResultOptions] = useState([])
     const [result, setResult] = useState(null)
     const [resultComment, setResultComment] = useState('')
@@ -40,6 +49,17 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
      const [selectedStaff, setSelectedStaff] = useState(null);
 
      const saveResult =() =>{
+         if(result==''||null){
+             showEmptyMsg()
+             return;
+
+         }
+         if(selectedStaff===null){
+             showEmptyMsg()
+
+             return;
+
+         }
         fetch(`https://clinicplusug.com/app/api/add_defined/${currentUser.test_id}`,{
             method:'POST',
             headers:{
@@ -58,7 +78,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
             })
         })
         .then(res => res.json())
-        .then(res =>console.warn(res))
+        .then(res =>console.log(res))
         .catch(err => console.log(err))
         .finally(()=>{
             showToastWithGravity()
@@ -83,15 +103,33 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
           }
      }, [])
 
+     useEffect(() => {
+        Dimensions.addEventListener("change", onChange)
+         return () => {
+            Dimensions.removeEventListener("change", onChange)
+         }
+     }, [])
+
     return (
         <View style={{flex:1}}>
+            <View style={{width:'100%',flexDirection:'row',paddingTop:10,height:40,backgroundColor:'#92D1C6',justifyContent:'space-between'}}>
+                
+                <TouchableOpacity
+                onPress={()=>navigation.goBack()}
+                >
+                <AntDesign name='arrowleft' size={21} style={{paddingLeft:10,color:'#fff'}} />
+                </TouchableOpacity>
+                <Text style={{fontSize:17,color:'#fff',fontWeight:'bold'}}>Add Result for {selected.toUpperCase()}</Text>
+                <Text></Text>
+            </View>
              <View style={{width:'100%',padding:10, height:"100%",backgroundColor:'#fff'}}>
                 <View style={{width:'100%'}}>
-                <Text style={{fontSize:14,fontWeight:'bold'}}>Add Result for {selected.toUpperCase()}</Text>
                 </View>
                 <ScrollView contentContainerStyle={{width:'100%', height:'100%'}}>
-                <ScrollView  style={{width:'100%',height:'100%'}}>
-                    <Text style={{marginTop:50}}>Select Result</Text>
+                <ScrollView 
+                showsVerticalScrollIndicator={false}
+                 style={{width:'100%',height:'100%'}}>
+                    <Text style={{marginTop:15}}>Select Result</Text>
                 
                     <View style={{width:'100%',borderWidth:1,borderColor:'#ccc',borderRadius:3,marginVertical:15}}> 
                     <Picker
@@ -134,25 +172,26 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                     <TextInput 
                         multiline
                         maxLength={200}
-                        style={{width:dimensions.window.width-80,height:70,marginTop:5,borderWidth:0.5}}
+                        style={{width:dimensions.window.width-20,height:70,marginTop:5,borderWidth:0.5}}
                         onChangeText={(e)=>setResultComment(e)}
                         />
                     </View>
                     ):null
                 }
+               <View style={{width:'100%',flexDirection:'row',alignItems:'center',marginTop:25}}>
+              
                 <TouchableOpacity
-                style={{width:dimensions.window.width/1.2+40, height:40,backgroundColor:'#fff',borderWidth:1,borderRadius:20,justifyContent:'center',alignSelf:'center',marginTop:10}}
-                onPress={()=>{
-                    navigation.navigate('Test')                    
-                }}
-                >
-                    <Text style={{alignSelf:'center'}}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                style={{width:dimensions.window.width/1.2+40, height:40,backgroundColor:result !=null?'teal':'#eee',borderRadius:20,justifyContent:'center',alignSelf:'center',marginTop:10}}
+                style={{width:dimensions.window.width-25, height:40,alignSelf:'center',backgroundColor:result !=null?'teal':'#eee',borderRadius:20,justifyContent:'center',alignSelf:'center',marginTop:10}}
                 onPress={()=>result !=null?saveResult():null}
                 >
                     <Text style={{alignSelf:'center',color:result !=null?'#fff':'black'}}>Save Result</Text>
+                </TouchableOpacity>
+
+               </View>
+                <TouchableOpacity
+                style={{width:dimensions.window.width/1.2+40, height:50 }}
+                >
+
                 </TouchableOpacity>
                 
                 </ScrollView>

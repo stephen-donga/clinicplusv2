@@ -1,6 +1,8 @@
 package com.clinicplusv2;
 
+import android.os.Bundle; // here 
 import com.facebook.react.ReactActivity;
+import org.devio.rn.splashscreen.SplashScreen; // here 
 
 public class MainActivity extends ReactActivity {
 
@@ -12,4 +14,10 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "clinicplusv2";
   }
+
+     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.show(this);  // here 
+        super.onCreate(savedInstanceState);
+    }
 }

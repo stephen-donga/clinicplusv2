@@ -60,13 +60,14 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
 
     return (
         <View style={{flex:1, backgroundColor:'#fff'}}>
-             <View style={{width:'100%',height:40,flexDirection:'row', backgroundColor:'#92D1C6'}}>
+             <View style={{width:'100%',height:40,flexDirection:'row',justifyContent:'space-between', backgroundColor:'#92D1C6'}}>
                  <TouchableOpacity
                  onPress={()=>navigation.navigate('TestList')}
                   >
-                     <AntDesign name='arrowleft' size={21} style={{marginTop:8,paddingLeft:10,color:'grey'}} />
+                     <AntDesign name='arrowleft' size={21} style={{marginTop:8,paddingLeft:10,color:'#fff'}} />
                  </TouchableOpacity>
-                <Text style={{fontSize:17,fontWeight:'bold', marginLeft:10,marginTop:8,color:'#fff'}}>{capitalize(patient.patient.toLowerCase())}</Text>
+                <Text style={{fontWeight:'bold',fontSize:17, marginLeft:10,marginTop:8,color:'#fff'}}>{capitalize(patient.patient.toLowerCase())}</Text>
+                <Text style={{fontWeight:'bold', marginLeft:10,marginTop:8,color:'#fff'}}></Text>
             </View>
 
             <ScrollView 
@@ -77,6 +78,9 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
                     keyExtractor={(item,idx)=>idx.toString()}
                     showsVerticalScrollIndicator={false}
                     renderItem={({item})=>(
+                        <TouchableOpacity 
+                        onPress={()=> handleTestRequest(item)}
+                        >
                         <View style={{width:'95%',flexDirection:'row',justifyContent:'space-between',height:50,padding:15,elevation:3,alignSelf:'center' ,backgroundColor:'#fff',margin:5}}>
                               <Text style={{fontSize:13}}>{capitalize(item.test.toLowerCase())}</Text>
                                 <TouchableOpacity
@@ -86,14 +90,15 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
                                 >
                               <AntDesign name={checkIfResultType(item)}  color='#10093E' size={24} />
                               </TouchableOpacity>
-                            </View>
+                        </View>
+                        </TouchableOpacity>
                     )}
             
 
             />
             </ScrollView>
           
-             
+              
 
         </View>
     )

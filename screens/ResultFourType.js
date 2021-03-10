@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import { View,ScrollView,TouchableOpacity,ToastAndroid,TextInput,FlatList,Dimensions,Picker,Text } from 'react-native'
 import {connect} from 'react-redux'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const window = Dimensions.get('window')
 const screen = Dimensions.get('screen')
@@ -43,12 +44,24 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
         );
       };
 
+      const showEmpty = () => {
+        ToastAndroid.showWithGravity(
+          "Please enter result !",
+          ToastAndroid.BOTTOM,
+          ToastAndroid.BOTTOM
+        );
+      };
+
 
       const handleSelectedResult =(item)=>{
           setResultSelected(item)
       }
 
     const saveResult =()=>{
+        if(resultOfFour==''||null){
+            showEmpty()
+            return
+        }
 
         fetch(`https://clinicplusug.com/app/api/add_parameter/${currentUser.test_id}`,{
             method:'POST',
@@ -69,14 +82,13 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
             })
         })
         .then(res => res.json())
-        .then(res =>console.warn(res))
+        .then(res =>console.log(res))
         .catch(err => console.log(err))
         .finally(()=>{
             showToastWithGravity()
             navigation.navigate('TestList')
         })
     }
-
         
     useEffect(() => {
          
@@ -117,13 +129,25 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     }, [])
     
     return (
-         
+         <View style={{flex:1}}>
+
+               <View style={{width:'100%',flexDirection:'row',paddingTop:10,height:40,backgroundColor:'#92D1C6',justifyContent:'space-between'}}>
+                
+                <TouchableOpacity
+                onPress={()=>navigation.goBack()}
+                >
+                <AntDesign name='arrowleft' size={21} style={{paddingLeft:10,color:'#fff'}} />
+                </TouchableOpacity>
+                <Text style={{fontSize:17,color:'#fff',fontWeight:'bold'}}>{selected.toUpperCase()}</Text>
+                <Text></Text>
+            </View>
             <View style={{flex:1,padding:10,backgroundColor:'#fff'}}>
-                <Text style={{fontSize:15,fontWeight:'bold'}}>Add Result for {selected.toUpperCase()}</Text>
+              
                 <ScrollView contentContainerStyle={{width:'100%',height:'100%',backgroundColor:'#fff'}}>
-               <ScrollView 
-               showsVerticalScrollIndicator={false}
-               >
+               
+                <ScrollView 
+                 showsVerticalScrollIndicator={false}
+                 >
                 <Text style={{marginTop:20,}}>Select Technician ( Who exactly made the spacemen examination)</Text>
                 <View style={{width:'100%',borderWidth:0.8,borderRadius:3,marginVertical:10}}>
                 <Picker
@@ -166,36 +190,36 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                    <FlatList 
                        data={results}
                        showsVerticalScrollIndicator={false}
-                       keyExtractor={(item)=>item.result_type}
+                       keyExtractor={(item,idx)=>idx.toString()}
                        renderItem={({item})=>(
                            <View style={{width:'100%',height:70,marginVertical:5}}>
-                               <View style={{width:'100%',flexDirection:'row',borderWidth:0.3}}>
-                                  <View style={{width:'40%',height:70,borderLeftWidth:0.3,padding:5,alignItems:'center',justifyContent:'center' }}>
+                               <View style={{width:'100%',flexDirection:'row',borderWidth:1}}>
+                                  <View style={{width:'40%',height:70,padding:5,alignItems:'center',justifyContent:'center' }}>
                                       <Text>{item.result_name}</Text>
                                   </View>
-                                  <View style={{width:'20%',height:70,borderLeftWidth:0.3,alignItems:'center',justifyContent:'center' }}>
+                                  <View style={{width:'20%',height:70,borderLeftWidth:1,alignItems:'center',justifyContent:'center' }}>
                                       <TextInput 
-                                       style={{width:'90%',borderWidth:0.2,padding:20}}
-                                       keyboardType="numeric"
-                                       height={55}
-                                       placeholder={parameterValue(item)}
-                                       onChangeText={(e)=>{
-                                        setResultOfFour(e)
-                                        handleSelectedResult(item)
-                                       }}
+                                            style={{width:'90%',borderWidth:1,textAlign:'center'}}
+                                            keyboardType="numeric"
+                                            height={55}
+                                            placeholder={parameterValue(item)}
+                                            onChangeText={(e)=>{
+                                                setResultOfFour(e)
+                                                handleSelectedResult(item)
+                                            }}
 
                                        />
                                   </View>
-                                  <View style={{width:'40%',height:70,borderLeftWidth:0.3,alignItems:'center',justifyContent:'center' }}>
+                                  <View style={{width:'40%',height:70,borderLeftWidth:1,alignItems:'center',justifyContent:'center' }}>
                                       <TextInput 
-                                       style={{width:'90%',borderWidth:0.2}}
-                                       multiline
-                                       maxLength={200}
-                                       height={55}
-                                       placeholder='comment'
-                                       onChangeText={(e)=>{
-                                        setResultComment(e)
-                                       }}
+                                            style={{width:'90%',borderWidth:1}}
+                                            multiline
+                                            maxLength={200}
+                                            height={55}
+                                            placeholder='comment'
+                                            onChangeText={(e)=>{
+                                                setResultComment(e)
+                                            }}
 
                                        />
                                   </View>
@@ -207,27 +231,30 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                        />
                       ) :null
                    }
-                    
-                           <TouchableOpacity
-                            style={{width:dimensions.window.width/1.2+40, height:40,backgroundColor:'#fff',borderWidth:1,borderRadius:20,justifyContent:'center',alignSelf:'center',marginTop:10}}
-                            onPress={()=>navigation.navigate('Test')}
-                            >
-                                <Text style={{alignSelf:'center'}}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                            style={{width:dimensions.window.width/1.2+40, height:40,backgroundColor:selectedStaff?'teal':'#eee',borderRadius:20,justifyContent:'center',alignSelf:'center',marginTop:10}}
-                            onPress={()=>selectedStaff ?saveResult():null}
-                            >
-                                <Text style={{alignSelf:'center',color:selectedStaff?'#fff':'#000'}}>Save Result</Text>
-                            </TouchableOpacity>
-                           <View style={{width:'100%',height:50}}>
+                           
+                           <View style={{width:'100%',height:15}}>
 
                            </View>
+                           <View style={{width:'100%',flexDirection:'row',alignItems:'center',marginTop:25}}>
+              
+                                <TouchableOpacity
+                                style={{width:dimensions.window.width-25, height:40,alignSelf:'center',backgroundColor:selectedStaff?'teal':'#eee',borderRadius:20,justifyContent:'center',alignSelf:'center',marginTop:10}}
+                                onPress={()=>selectedStaff?saveResult():null}
+                                >
+                                    <Text style={{alignSelf:'center',color:selectedStaff?'#fff':'black'}}>Save Result</Text>
+                                </TouchableOpacity>
+
+                                </View>
+                                <TouchableOpacity
+                                style={{width:dimensions.window.width/1.2+40, height:50 }}
+                                >
+
+                                </TouchableOpacity>
                         
 
                 </ScrollView>
                 </ScrollView>
-
+                </View>
             </View>
  
     )

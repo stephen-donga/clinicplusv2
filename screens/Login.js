@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useRef} from 'react'
-import { View,ScrollView, Text, TouchableOpacity,TextInput } from 'react-native'
+import { View,ScrollView,Image, Text, TouchableOpacity,TextInput } from 'react-native'
 import Modal from 'react-native-modal';
 import Loading from 'react-native-whc-loading'
 
@@ -25,6 +25,7 @@ const Login = ({setLoggedInUser,navigation}) => {
     const loading = useRef(null)
 
     const loginToSystem = ()=>{
+
         fetch('https://clinicplusug.com/app/api/login',{
             method:'POST',
             headers: {
@@ -41,10 +42,16 @@ const Login = ({setLoggedInUser,navigation}) => {
         .then(res=>{
             if(res.msg){
                 setIsModalVisible(!isModalVisible)
-                setLoginMsg('Failed to Login !')
+                loading.current.close()
+                setLoginMsg('Wrong email or password !')
             }else if(res.user_id){
+                setEmail("")
+                setPassword("")
                 setLoggedInUser(res)
+                setEmailErrorMessage("")
+                setPasswordErrorMessage("")
                 navigation.navigate('TestList')
+
             }else{
                 setIsModalVisible(!isModalVisible)
                 setLoginMsg('An error ocurred')
@@ -71,16 +78,9 @@ const Login = ({setLoggedInUser,navigation}) => {
             return;
         } 
         if(checkIfValidEmail(email)){
-
             loading.current.show()
-            setTimeout(()=>{
-                loading.current.close()
                 loginToSystem()
-                setEmail("")
-                setPassword("")
-                setEmailErrorMessage("")
-                setPasswordErrorMessage("")
-            },2000)
+           
 
         }else{
             setIsModalVisible(true)
@@ -89,19 +89,39 @@ const Login = ({setLoggedInUser,navigation}) => {
         }
     }
 
+    useEffect(() => {
+        return () => {
+            loading.current.close()
+        }
+    }, [])
+
+    useEffect(() => {
+        return () => {
+            setIsModalVisible(false)
+             
+        }
+    }, [])
+    
+    useEffect(() => {
+        return () => {
+            loginToSystem()
+        }
+    }, [])
     return (
         <ScrollView contentContainerStyle={{flex:1, backgroundColor:'#92D1C6'}}>
              <View style={{width:'100%',height:'30%',alignItems:'center',justifyContent:'center'}}>
-                 <Text style={{fontSize:25,fontWeight:'bold',color:'#fff'}}>Clinicplus</Text>
+                 <Image style={{width:80,height:80,borderRadius:40}} source={require('../assets/logo.png')} />
 
              </View>
              <ScrollView 
+             showsVerticalScrollIndicator={false}
              containerContentStyle={{width:'100%',height:'60%'}}>
+                 <View style={{height:80}} />
                  <TextInput
                  placeholder='Email'
                  value={email}
                  onChangeText={handleEmailChange}
-                 style={{width:'70%',borderWidth:1,borderRadius:30,paddingHorizontal:25,backgroundColor:'#eee',alignSelf:'center',margin:15}}
+                 style={{width:'80%',borderWidth:0,borderRadius:30,paddingHorizontal:25,backgroundColor:'#eee',alignSelf:'center',margin:10}}
                  />
                  <View style={{width:'60%',alignSelf:'center'}}>
                  <Text style={{color:'red'}}>{email ?"":emailErrorMessage}</Text>
@@ -112,7 +132,7 @@ const Login = ({setLoggedInUser,navigation}) => {
                     value={password}
                     secureTextEntry={true}
                     onChangeText={handlePasswordChange}
-                    style={{width:'70%',borderWidth:1,borderRadius:30,paddingHorizontal:25,backgroundColor:'#eee',alignSelf:'center',margin:15}}
+                    style={{width:'80%',borderWidth:0,borderRadius:30,paddingHorizontal:25,backgroundColor:'#eee',alignSelf:'center',margin:10}}
                     />
                  <View style={{width:'60%',alignSelf:'center'}}>
                  <Text style={{color:'red'}}>{password?"":passwordErrorMessage}</Text>
@@ -120,15 +140,15 @@ const Login = ({setLoggedInUser,navigation}) => {
                
                  <TouchableOpacity
                     onPress={handleLogin}
-                    style={{width:'50%',height:50,backgroundColor:'#10093E',alignSelf:'center', borderRadius:30,alignItems:'center',justifyContent:'center',marginTop:15}}
+                    style={{width:'60%',height:50,backgroundColor:'#10093E',alignSelf:'center', borderRadius:30,margin:10,alignItems:'center',justifyContent:'center'}}
                     >
                      <Text style={{fontSize:16,color:'#fff'}}>Login</Text>
                  </TouchableOpacity>
 
                  <TouchableOpacity
-                    style={{width:'70%' , borderRadius:30,justifyContent:'center',alignSelf:'center',margin:5,marginLeft:10}}
+                    style={{width:'80%', alignSelf:'center', borderRadius:30,alignItems:'center',justifyContent:'center',alignSelf:'center',margin:5,marginTop:15,marginBottom:15}}
                     >
-                     <Text style={{fontSize:16,color:'#fff'}}>Forgot Password ?</Text>
+                     <Text style={{fontSize:15,color:'#fff',paddingLeft:10}}>Forgot Password ?</Text>
                  </TouchableOpacity>
 
                  <Loading ref={loading}/>
@@ -138,8 +158,8 @@ const Login = ({setLoggedInUser,navigation}) => {
                  >
                      <View style={{width:'80%',height:'50%',borderRadius:5,padding:20,alignItems:'center',justifyContent:'center', backgroundColor:'#92D1C6',alignSelf:'center'}}>
                         <View style={{height:'70%',justifyContent:'center'}}>
-                        <Text style={{fontSize:17,color:'red'}}>{emailChecking}</Text>
-                        <Text style={{fontSize:17,color:'red'}}>{loginMsg}</Text>
+                        <Text style={{fontSize:15,color:'red'}}>{emailChecking}</Text>
+                        <Text style={{fontSize:15,color:'red'}}>{loginMsg}</Text>
                         </View>
                          <View style={{height:'30%'}}>
                          <TouchableOpacity

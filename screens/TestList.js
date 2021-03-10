@@ -1,17 +1,18 @@
 import React,{useState,useEffect, useRef} from 'react'
-import { View,Text,FlatList, } from 'react-native'
+import { View,Text,FlatList, ActivityIndicator,ScrollView, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import {connect} from 'react-redux'
 import {setTestList} from '../redux/tests/testAction'
 import {setCurrentUser} from '../redux/user/userActions'
-import AntDesign from 'react-native-vector-icons/AntDesign'
+import Feather from 'react-native-vector-icons/Feather'
 import Loading from 'react-native-whc-loading'
 
 
 
-const TestList = ({currentUser,setUser,pendingTests,testList,navigation}) => {
+const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
     const [tests, setTests] = useState([])
+    const [showProfile, setShowProfile] = useState(false)
 
     const capitalize = (name)=>{
         return name.charAt(0).toUpperCase()+name.slice(1)
@@ -20,7 +21,7 @@ const TestList = ({currentUser,setUser,pendingTests,testList,navigation}) => {
     const id = currentUser.user_id;
 
     const loading = useRef(null)
- 
+
 
     useEffect(() => {
 
@@ -39,6 +40,9 @@ const TestList = ({currentUser,setUser,pendingTests,testList,navigation}) => {
                 },300)
             })
             .catch(err => console.log(err))
+            return ()=>{
+                setShowProfile(false)
+            }
     }, [])
 
     const logOut =()=>{
@@ -52,27 +56,36 @@ const TestList = ({currentUser,setUser,pendingTests,testList,navigation}) => {
     }
     
     return (
+        
         <View style={{flex:1, backgroundColor:'#fff'}}>
-            <View style={{width:'100%',height:50, backgroundColor:'#92D1C6',justifyContent:'center'}}>
+            
+            <View style={{width:'100%',height:40, backgroundColor:'#92D1C6',justifyContent:'center'}}>
                 <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',paddingHorizontal:5,paddingVertical:5}}>
-                <Text style={{fontSize:15,marginLeft:10,color:'#10093E'}}>{currentUser.name}</Text>
                 <TouchableOpacity 
-                onPress={logOut}
-                style={{width:30,height:30,borderRadius:15,backgroundColor:'#D83972',alignItems:'center',justifyContent:'center'}}
+                style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
                 >
-                    <AntDesign name='logout'color='#fff' size={20} />
+                </TouchableOpacity>
+
+                <Text style={{fontSize:18,fontWeight:'bold',color:'#fff'}}>{currentUser.clinicName ?currentUser.clinicName.toUpperCase(): null}</Text>
+                <TouchableOpacity 
+                onPress={()=>setShowProfile(!showProfile)}
+                style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
+                >
+                    <Feather name='more-vertical'color='#fff' size={25} />
                 </TouchableOpacity>
 
                 </View>
 
             </View>
             <Loading ref={loading}/>
-            <Text style={{margin:10,fontSize:17,fontWeight:'bold',color:'#10093E'}}>Pending Tests</Text>
+
+            
+           
             {
                 tests.length < 1 ? 
                    (
                        <View style={{width:'100%',height:'100%',backgroundColor:'#fff',alignSelf:'center',alignItems:'center',paddingTop:50}}>
-                            <Text style={{fontSize:16}}>No tests pending !</Text>
+                             <ActivityIndicator size="large" color="grey" />
                        </View>
                    )
                  :null
@@ -81,30 +94,70 @@ const TestList = ({currentUser,setUser,pendingTests,testList,navigation}) => {
              
             <FlatList
                    data={tests}
+                   style={{position:'relative'}}
                    keyExtractor={(item,idx)=>idx.toString()}
                    showsVerticalScrollIndicator={false}
                    renderItem={({item})=>(
                    item.pending_tests.length > 0 ?
-                   <TouchableOpacity
-                       onPress={()=>navigation.navigate('Test',item)}
-                   >
-                           <View style={{width:'95%',height:50,elevation:3,backgroundColor:'#fff', borderRadius:0,marginVertical:5,padding:5, flexDirection:'row', alignSelf:'center'}}>
-                               <View style={{width:'70%',justifyContent:'center',paddingLeft:10}}>
-                                   <Text style={{fontSize:15}}>{capitalize(item.patient.toLowerCase())}</Text>
-                               </View>
-                           </View>
-                   </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={()=>{
+                                navigation.navigate('Test',item)
+                                setShowProfile(false)
+                            }}
+                        >
+                            <View style={{width:'95%',height:50,elevation:3,backgroundColor:'#fff', borderRadius:0,marginVertical:5,padding:5, flexDirection:'row', alignSelf:'center'}}>
+                                <View style={{width:'70%',justifyContent:'center',paddingLeft:10}}>
+                                    <Text style={{fontSize:15}}>{capitalize(item.patient.toLowerCase())}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                   
                    
                    :null
                )}
 
             />
+            {
+                showProfile&&(
+                    <View style={{position:'absolute',width:'60%',padding:10,top:60,right:15,elevation:3,backgroundColor:'#eee'}}>
+                            <Text style={{fontSize:15,fontWeight:'bold',alignSelf:'center'}}>{currentUser.name}</Text>
+                            <View style={{width:'100%',borderBottomWidth:1,marginVertical:5}} />
+                        <ScrollView
+                        contentContainerStyle={{width:'100%', height:'100%'}}
+                        >
+                            <ScrollView
+                            showsVerticalScrollIndicator={false} 
+                            >
+                           
+                            <TouchableOpacity
+                            onPress={()=>{
+                                setShowProfile(false)
+                                navigation.navigate('UserProfile')
+                            }} 
+                            style={{marginVertical:5,borderWidth:0.8,borderColor:'#fff',paddingHorizontal:5,bottom:5}}
+                            >
+                                <Text style={{fontSize:15,marginVertical:5}}>View Profile</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                            onPress={logOut} 
+                            style={{flexDirection:'row',marginVertical:5,borderWidth:0.8,borderColor:'#fff',paddingHorizontal:5,bottom:5}}
+                            >
+                                <Feather name='log-out' size={20} style={{marginVertical:5}}/>
+                                <Text style={{fontSize:15,marginLeft:5,marginVertical:5}}>Logout</Text>
+                            </TouchableOpacity>
+
+                            </ScrollView>
+                        </ScrollView>
+
+                    </View>
+                )
+            }
         </View>
     )
 }
 const mapStateToProps = ({user,test})=>({
     currentUser: user.currentUser,
-    testList : test.patients
 })
 
 const mapDispatchToProps = dispatch =>({
