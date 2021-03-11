@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import {connect} from 'react-redux'
 import {setTestList} from '../redux/tests/testAction'
 import {setStaffList} from '../redux/staff/staffActions'
+import {urlConnection} from '../url'
 
  
 const Test = ({setStaffLst, currentUser, route, navigation}) => {
@@ -25,7 +26,7 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
          
         let id = currentUser.user_id
 
-        fetch(`https://clinicplusug.com/app/api/staffs/${id}`,{
+        fetch(urlConnection(`staffs/${id}`),{
             method:'GET',
             headers:{
                 Accept: "application/json",
@@ -66,7 +67,7 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
                   >
                      <AntDesign name='arrowleft' size={21} style={{marginTop:8,paddingLeft:10,color:'#fff'}} />
                  </TouchableOpacity>
-                <Text style={{fontWeight:'bold',fontSize:17, marginLeft:10,marginTop:8,color:'#fff'}}>{capitalize(patient.patient.toLowerCase())}</Text>
+                <Text style={{fontWeight:'bold',fontSize:17, marginLeft:-20,marginTop:8,color:'#fff'}}>{capitalize(patient.patient.toLowerCase())}</Text>
                 <Text style={{fontWeight:'bold', marginLeft:10,marginTop:8,color:'#fff'}}></Text>
             </View>
 

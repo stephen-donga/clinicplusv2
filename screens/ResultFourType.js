@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react'
 import { View,ScrollView,TouchableOpacity,ToastAndroid,TextInput,FlatList,Dimensions,Picker,Text } from 'react-native'
 import {connect} from 'react-redux'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import {urlConnection} from '../url'
 
 const window = Dimensions.get('window')
 const screen = Dimensions.get('screen')
@@ -63,7 +64,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
             return
         }
 
-        fetch(`https://clinicplusug.com/app/api/add_parameter/${currentUser.test_id}`,{
+        fetch(urlConnection(`add_parameter/${currentUser.test_id}`),{
             method:'POST',
             headers:{
                 Accept: "application/json",
@@ -92,7 +93,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
         
     useEffect(() => {
          
-        fetch(`https://clinicplusug.com/app/api/testparameter/${item.test_id}`,{
+        fetch(urlConnection(`testparameter/${item.test_id}`),{
             method:'GET',
             headers:{
                 Accept: "application/json",
@@ -114,7 +115,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     }, [])
 
     useEffect(() => {
-        fetch(`https://clinicplusug.com/app/api/result_options/${item.test_id}`,{
+        fetch(urlConnection(`result_options/${item.test_id}`),{
             method:'GET',
             headers:{
                 Accept: "application/json",

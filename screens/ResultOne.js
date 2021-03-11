@@ -2,6 +2,7 @@ import React,{useState, useEffect} from 'react'
 import { View,ScrollView,Picker,Dimensions,ToastAndroid,TouchableOpacity,TextInput, Text } from 'react-native'
 import {connect} from 'react-redux'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import {urlConnection} from '../url'
 
 
 const window = Dimensions.get('window')
@@ -60,7 +61,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
              return;
 
          }
-        fetch(`https://clinicplusug.com/app/api/add_defined/${currentUser.test_id}`,{
+        fetch(urlConnection(`add_defined/${currentUser.test_id}`),{
             method:'POST',
             headers:{
                 Accept: "application/json",
@@ -88,7 +89,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
 
      useEffect(() => {
         let test_id = item.test_id
-        fetch(`https://clinicplusug.com/app/api/result_options/${test_id}`,{
+        fetch(urlConnection(`result_options/${test_id}`),{
             method:'GET',
             headers:{
                 Accept: "application/json",
@@ -119,7 +120,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                 >
                 <AntDesign name='arrowleft' size={21} style={{paddingLeft:10,color:'#fff'}} />
                 </TouchableOpacity>
-                <Text style={{fontSize:17,color:'#fff',fontWeight:'bold'}}>Add Result for {selected.toUpperCase()}</Text>
+                <Text style={{fontSize:17,marginLeft:-20,color:'#fff',fontWeight:'bold'}}>{selected.toUpperCase()}</Text>
                 <Text></Text>
             </View>
              <View style={{width:'100%',padding:10, height:"100%",backgroundColor:'#fff'}}>

@@ -1,11 +1,11 @@
 import React,{useState, useEffect, useRef} from 'react'
-import { View,ScrollView,Image, Text, TouchableOpacity,TextInput } from 'react-native'
+import { View,ScrollView,Image,ActivityIndicator, Text, TouchableOpacity,TextInput } from 'react-native'
 import Modal from 'react-native-modal';
-import Loading from 'react-native-whc-loading'
 
 
 import {connect} from 'react-redux'
 import {setCurrentUser} from '../redux/user/userActions'
+import {urlConnection} from '../url'
 
 
 const checkIfValidEmail = require('../utils')
@@ -17,16 +17,17 @@ const Login = ({setLoggedInUser,navigation}) => {
     const [emailChecking,setEmailChecking] = useState('')
     const [ loginMsg,setLoginMsg] = useState('')
 
+    const [loading, setLoading] = useState(false)
+
     const [isModalVisible, setIsModalVisible] = useState(false)
 
     const [emailErrorMessage, setEmailErrorMessage] = useState("")
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
 
-    const loading = useRef(null)
 
     const loginToSystem = ()=>{
 
-        fetch('https://clinicplusug.com/app/api/login',{
+        fetch(urlConnection('login') ,{
             method:'POST',
             headers: {
                 Accept: "application/json",
@@ -42,7 +43,7 @@ const Login = ({setLoggedInUser,navigation}) => {
         .then(res=>{
             if(res.msg){
                 setIsModalVisible(!isModalVisible)
-                loading.current.close()
+                setLoading(false)
                 setLoginMsg('Wrong email or password !')
             }else if(res.user_id){
                 setEmail("")
@@ -78,7 +79,7 @@ const Login = ({setLoggedInUser,navigation}) => {
             return;
         } 
         if(checkIfValidEmail(email)){
-            loading.current.show()
+            setLoading(true)
                 loginToSystem()
            
 
@@ -91,14 +92,23 @@ const Login = ({setLoggedInUser,navigation}) => {
 
     useEffect(() => {
         return () => {
-            loading.current.close()
+            setIsModalVisible(false)
+             
         }
     }, [])
 
     useEffect(() => {
+        
         return () => {
-            setIsModalVisible(false)
-             
+            handleLogin()
+            
+        }
+    }, [])
+
+    useEffect(() => {
+        
+        return () => {
+            setLoading(false)
         }
     }, [])
     
@@ -137,13 +147,20 @@ const Login = ({setLoggedInUser,navigation}) => {
                  <View style={{width:'60%',alignSelf:'center'}}>
                  <Text style={{color:'red'}}>{password?"":passwordErrorMessage}</Text>
                  </View>
-               
                  <TouchableOpacity
                     onPress={handleLogin}
                     style={{width:'60%',height:50,backgroundColor:'#10093E',alignSelf:'center', borderRadius:30,margin:10,alignItems:'center',justifyContent:'center'}}
                     >
-                     <Text style={{fontSize:16,color:'#fff'}}>Login</Text>
+                    {
+                        loading ?(
+                            <ActivityIndicator size='large' color="grey" style={{position:'absolute',alignSelf:'center'}}/>
+
+                        ):(
+                            <Text style={{fontSize:16,color:'#fff'}}>Login</Text>
+                        )
+                    }
                  </TouchableOpacity>
+
 
                  <TouchableOpacity
                     style={{width:'80%', alignSelf:'center', borderRadius:30,alignItems:'center',justifyContent:'center',alignSelf:'center',margin:5,marginTop:15,marginBottom:15}}
@@ -151,8 +168,9 @@ const Login = ({setLoggedInUser,navigation}) => {
                      <Text style={{fontSize:15,color:'#fff',paddingLeft:10}}>Forgot Password ?</Text>
                  </TouchableOpacity>
 
-                 <Loading ref={loading}/>
+                 {/* <Loading ref={loading}/> */}
 
+                
                  <Modal
                     isVisible={isModalVisible}
                  >

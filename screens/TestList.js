@@ -6,6 +6,7 @@ import {setTestList} from '../redux/tests/testAction'
 import {setCurrentUser} from '../redux/user/userActions'
 import Feather from 'react-native-vector-icons/Feather'
 import Loading from 'react-native-whc-loading'
+import {urlConnection} from '../url'
 
 
 
@@ -24,8 +25,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
 
     useEffect(() => {
-
-            fetch(`https://clinicplusug.com/app/api/pending/${id}`,{
+            fetch(urlConnection(`pending/${id}`),{
                 method:'GET',
                 headers:{
                     Accept: "application/json",
@@ -45,11 +45,16 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             }
     }, [])
 
+    useEffect(() => {
+        return () => {
+            loading.current.close()
+
+        }
+    }, [])
     const logOut =()=>{
         loading.current.show()
         setTimeout(()=>{
             setUser({})
-            loading.current.close()
             navigation.navigate('Login')
 
         },1000)
