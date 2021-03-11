@@ -12,7 +12,6 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
 
     const item = route.params;
 
-    console.log(item)
 
     const [dimensions, setDimensions] = useState({ window, screen });
     const onChange = ({ window, screen }) => {
@@ -45,8 +44,6 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
 
     const selected = item.test
 
-
-     //staff /technician
      const [selectedStaff, setSelectedStaff] = useState(null);
 
      const saveResult =() =>{
@@ -61,18 +58,21 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
              return;
 
          }
-        fetch(urlConnection(`add_defined/${currentUser.test_id}`),{
+         
+        
+        fetch(urlConnection(`add_defined/${currentUser.user_id}`),{
             method:'POST',
             headers:{
                 Accept: "application/json",
                 "Content-Type": "application/json"
             },
             body:JSON.stringify({
+                user_id:currentUser.user_id,
                 cost:item.cost,
                 description:resultComment,
                 request_id:item.order_id,
-                result_value:result,
                 tecnichian:selectedStaff,
+                result_id:result,
                 test_id:item.test_id,
                 test_name:item.test,
                 visit_id: item.visit_id
@@ -139,7 +139,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                         setResult(itemValue)
                     }
                     }>
-                        <Picker.Item label=' ' value=''/>
+                        <Picker.Item label='- - Select - - ' value=''/>
                     {
                         resultOptions.map(member =>(
                         <Picker.Item label={capitalize(member.result_name.toLowerCase())} value={member.id} key={member.id} />
@@ -160,7 +160,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                         onValueChange={(itemValue, itemIndex) =>
                         setSelectedStaff(itemValue)
                     }>
-                        <Picker.Item label=' ' value=''/>
+                        <Picker.Item label='- - Select - -  ' value=''/>
                     {
                         staff.map(member =>(
                         <Picker.Item label={capitalize(member.name.toLowerCase())} value={member.id} key={member.id} />

@@ -32,6 +32,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     
     const selected = item.test
 
+
     const parameterValue =(val)=>{
         let value = testParams.find(item =>item.parameter_name === val.result_name)
         return value.parameter_result
@@ -61,7 +62,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     const saveResult =()=>{
         if(resultOfFour==''||null){
             showEmpty()
-            return
+            return ;
         }
 
         fetch(urlConnection(`add_parameter/${currentUser.test_id}`),{
@@ -74,7 +75,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                 cost:item.cost,
                 parameter_result: resultOfFour,
                 parameter_comment:resultComment,
-                parameter_value:resultSelected.id,
+                parameter_id:resultSelected.id,
                 request_id:item.order_id,
                 tecnichian:selectedStaff,
                 test_id:item.test_id,
@@ -82,7 +83,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                 visit_id: item.visit_id
             })
         })
-        .then(res => res.json())
+        .then(response => response.json())
         .then(res =>console.log(res))
         .catch(err => console.log(err))
         .finally(()=>{
@@ -156,7 +157,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                        onValueChange={(itemValue, itemIndex) =>setSelectedStaff(itemValue)
                        
                    }>
-                       <Picker.Item label='' value={null}/>
+                       <Picker.Item label='- - Select - -' value={null}/>
                    {
                        staffList.map(member =>(
                        <Picker.Item label={capitalize(member.name.toLowerCase())} value={member.id} key={member.id} />

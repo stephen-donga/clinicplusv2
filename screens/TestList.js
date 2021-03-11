@@ -22,9 +22,11 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
     const id = currentUser.user_id;
 
     const loading = useRef(null)
+    const [isLoading, setIsloading] = useState(false)
 
 
     useEffect(() => {
+            setIsloading(true)
             fetch(urlConnection(`pending/${id}`),{
                 method:'GET',
                 headers:{
@@ -35,15 +37,19 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             .then(res => res.json())
             .then(res =>{
                 pendingTests(res)
+                setIsloading(false)
                 setTimeout(()=>{
                     setTests(res)
                 },300)
             })
-            .catch(err => console.log(err))
+            .catch(err =>{
+                console.log(err)
+                setIsloading(false)
+            } )
             return ()=>{
                 setShowProfile(false)
             }
-    }, [])
+    }, [pendingTests])
 
     useEffect(() => {
         return () => {
@@ -87,13 +93,19 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             
            
             {
-                tests.length < 1 ? 
+                tests.length < 1 && !isLoading? 
                    (
+                       <Text style={{alignSelf:'center',marginTop:50,color:'grey'}}>No tests pending.</Text>
+                   )
+                 :null
+            }
+            {
+                isLoading&&(
                        <View style={{width:'100%',height:'100%',backgroundColor:'#fff',alignSelf:'center',alignItems:'center',paddingTop:50}}>
                              <ActivityIndicator size="large" color="grey" />
                        </View>
-                   )
-                 :null
+
+                )
             }
             
              
