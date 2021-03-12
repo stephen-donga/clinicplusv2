@@ -60,7 +60,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
       }
 
     const saveResult =()=>{
-        if(resultOfFour==''||null){
+        if(resultOfFour===null){
             showEmpty()
             return ;
         }

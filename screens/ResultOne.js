@@ -47,7 +47,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
      const [selectedStaff, setSelectedStaff] = useState(null);
 
      const saveResult =() =>{
-         if(result==''||null){
+         if(result==null){
              showEmptyMsg()
              return;
 
@@ -139,7 +139,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                         setResult(itemValue)
                     }
                     }>
-                        <Picker.Item label='- - Select - - ' value=''/>
+                        <Picker.Item label='- - Select - - ' value={null}/>
                     {
                         resultOptions.map(member =>(
                         <Picker.Item label={capitalize(member.result_name.toLowerCase())} value={member.id} key={member.id} />
@@ -160,7 +160,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                         onValueChange={(itemValue, itemIndex) =>
                         setSelectedStaff(itemValue)
                     }>
-                        <Picker.Item label='- - Select - -  ' value=''/>
+                        <Picker.Item label='- - Select - -  ' value={null}/>
                     {
                         staff.map(member =>(
                         <Picker.Item label={capitalize(member.name.toLowerCase())} value={member.id} key={member.id} />
