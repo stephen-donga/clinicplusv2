@@ -36,22 +36,22 @@ const UserProfile = ({currentUser,navigation}) => {
                 >
                      <View style={{flexDirection:'row',margin:10}}>
                         <Feather name='mail' color='#92C1C2' size={24} />
-                        <Text style={{fontSize:15,fontWeight:'bold',marginLeft:10}}>{currentUser.email}</Text>
+                        <Text style={{fontSize:15,color:'#10093E',fontWeight:'bold',marginLeft:10}}>{currentUser.email}</Text>
                      </View>
 
                      <View style={{flexDirection:'row',margin:10}}>
                         <Feather name='phone' color='#92C1C2' size={24} />
-                        <Text style={{fontSize:15,fontWeight:'bold',marginLeft:10}}>+256{' '}{currentUser.contact}</Text>
+                        <Text style={{fontSize:15,color:'#10093E',fontWeight:'bold',marginLeft:10}}>+256{' '}{currentUser.contact}</Text>
                      </View>
 
                      <View style={{flexDirection:'row',margin:10}}>
                         <Feather name='map-pin' color='#92C1C2' size={24} />
-                        <Text style={{fontSize:15,fontWeight:'bold',marginLeft:10}}>{capitalize(currentUser.address.toLowerCase())}</Text>
+                        <Text style={{fontSize:15,color:'#10093E',fontWeight:'bold',marginLeft:10}}>{capitalize(currentUser.address.toLowerCase())}</Text>
                      </View>
 
                      <View style={{flexDirection:'row',margin:10}}>
                         <MaterialIcon name='admin-panel-settings' color='#92C1C2' size={24} />
-                        <Text style={{fontSize:15,fontWeight:'bold',marginLeft:10}}>{capitalize(currentUser.position.toLowerCase())}</Text>
+                        <Text style={{fontSize:15,color:'#10093E',fontWeight:'bold',marginLeft:10}}>{capitalize(currentUser.position.toLowerCase())}</Text>
                      </View>
                      
 

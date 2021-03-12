@@ -38,6 +38,14 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
         );
       };
 
+      const showSaveError = () => {
+        ToastAndroid.showWithGravity(
+          "Error saving result. please try again.",
+          ToastAndroid.BOTTOM,
+          ToastAndroid.BOTTOM
+        );
+      };
+
     const [resultOptions, setResultOptions] = useState([])
     const [result, setResult] = useState(null)
     const [resultComment, setResultComment] = useState('')
@@ -79,11 +87,14 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
             })
         })
         .then(res => res.json())
-        .then(res =>console.log(res))
-        .catch(err => console.log(err))
-        .finally(()=>{
+        .then(res =>{
             showToastWithGravity()
             navigation.navigate('TestList')
+            console.log(res)
+        })
+        .catch(err =>{
+            showSaveError()
+            console.log(err)
         })
      }
 

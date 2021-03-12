@@ -137,7 +137,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             {
                 showProfile&&(
                     <View style={{position:'absolute',width:'60%',padding:10,top:60,right:15,elevation:3,backgroundColor:'#eee'}}>
-                            <Text style={{fontSize:15,fontWeight:'bold',alignSelf:'center'}}>{currentUser.name}</Text>
+                            <Text style={{fontSize:15,color:'#10093E',fontWeight:'bold',alignSelf:'center'}}>{currentUser.name}</Text>
                             <View style={{width:'100%',borderBottomWidth:1,marginVertical:5}} />
                         <ScrollView
                         contentContainerStyle={{width:'100%', height:'100%'}}
@@ -153,7 +153,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                             }} 
                             style={{marginVertical:5,borderWidth:0.8,borderColor:'#fff',paddingHorizontal:5,bottom:5}}
                             >
-                                <Text style={{fontSize:15,marginVertical:5}}>View Profile</Text>
+                                <Text style={{fontSize:15,color:'#10093E',marginVertical:5}}>View Profile</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -161,7 +161,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                             style={{flexDirection:'row',marginVertical:5,borderWidth:0.8,borderColor:'#fff',paddingHorizontal:5,bottom:5}}
                             >
                                 <Feather name='log-out' size={20} style={{marginVertical:5}}/>
-                                <Text style={{fontSize:15,marginLeft:5,marginVertical:5}}>Logout</Text>
+                                <Text style={{fontSize:15,color:'#10093E',marginLeft:5,marginVertical:5}}>Logout</Text>
                             </TouchableOpacity>
 
                             </ScrollView>

@@ -168,8 +168,6 @@ const Login = ({setLoggedInUser,navigation}) => {
                      <Text style={{fontSize:15,color:'#fff',paddingLeft:10}}>Forgot Password ?</Text>
                  </TouchableOpacity>
 
-                 {/* <Loading ref={loading}/> */}
-
                 
                  <Modal
                     isVisible={isModalVisible}

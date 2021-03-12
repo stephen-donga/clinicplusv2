@@ -29,9 +29,11 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     const [resultOfFour, setResultOfFour] = useState('')
 
     const [resultSelected, setResultSelected] = useState({})
+    const [paramerSelected, setParameterSelected] = useState({})
     
     const selected = item.test
 
+  
 
     const parameterValue =(val)=>{
         let value = testParams.find(item =>item.parameter_name === val.result_name)
@@ -41,6 +43,13 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     const showToastWithGravity = () => {
         ToastAndroid.showWithGravity(
           "Result Saved",
+          ToastAndroid.BOTTOM,
+          ToastAndroid.BOTTOM
+        );
+      };
+    const  showResultSaveError = () => {
+        ToastAndroid.showWithGravity(
+          "Error saving result",
           ToastAndroid.BOTTOM,
           ToastAndroid.BOTTOM
         );
@@ -59,13 +68,37 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
           setResultSelected(item)
       }
 
+      const handleSelectedParam = (obj)=>{
+        let returnedParameter = testParams.find(item =>item.parameter_name === obj.result_name)
+          setParameterSelected(returnedParameter)
+      }
+
+
+
     const saveResult =()=>{
-        if(resultOfFour===null){
+        if(resultOfFour==null){
             showEmpty()
             return ;
         }
+        if(resultOfFour===''){
+            showEmpty()
 
-        fetch(urlConnection(`add_parameter/${currentUser.test_id}`),{
+            return;
+        }
+
+        let remainingParams = testParams.filter(item => item.parameter_name !==paramerSelected.parameter_name)
+       
+        let resultParameters = []
+        paramerSelected.parameter_result=resultOfFour
+        paramerSelected.parameter_comment=resultComment
+        
+        resultParameters.push(paramerSelected)
+       
+        
+        let testParamsToSave =  remainingParams.concat(resultParameters)
+        console.log(testParamsToSave)
+
+        fetch(urlConnection(`add_parameter/${currentUser.user_id}`),{
             method:'POST',
             headers:{
                 Accept: "application/json",
@@ -73,8 +106,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
             },
             body:JSON.stringify({
                 cost:item.cost,
-                parameter_result: resultOfFour,
-                parameter_comment:resultComment,
+                parameters:testParamsToSave,
                 parameter_id:resultSelected.id,
                 request_id:item.order_id,
                 tecnichian:selectedStaff,
@@ -84,12 +116,16 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
             })
         })
         .then(response => response.json())
-        .then(res =>console.log(res))
-        .catch(err => console.log(err))
-        .finally(()=>{
+        .then(res =>{
             showToastWithGravity()
             navigation.navigate('TestList')
+            console.log(res)
+
         })
+        .catch(err =>{
+            showResultSaveError()
+            console.log(err)
+        } )
     }
         
     useEffect(() => {
@@ -205,9 +241,11 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                                             keyboardType="numeric"
                                             height={55}
                                             placeholder={parameterValue(item)}
+                                            //  placeholder={}
                                             onChangeText={(e)=>{
                                                 setResultOfFour(e)
                                                 handleSelectedResult(item)
+                                                handleSelectedParam(item)
                                             }}
 
                                        />
