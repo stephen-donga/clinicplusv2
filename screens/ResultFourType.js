@@ -29,7 +29,6 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     const [resultOfFour, setResultOfFour] = useState('')
 
     const [resultSelected, setResultSelected] = useState({})
-    const [paramerSelected, setParameterSelected] = useState({})
     
     const selected = item.test
 
@@ -68,35 +67,35 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
           setResultSelected(item)
       }
 
-      const handleSelectedParam = (obj)=>{
-        let returnedParameter = testParams.find(item =>item.parameter_name === obj.result_name)
-          setParameterSelected(returnedParameter)
+      const setValue = (value, result_name) =>{
+          for(let i in testParams){
+              if(testParams[i].parameter_name===result_name){
+                  testParams[i].parameter_result=value
+                  break
+              }
+          }
       }
 
-
+      const setComment = (value, result_name) =>{
+        for(let i in testParams){
+            if(testParams[i].parameter_name === result_name){
+                testParams[i].parameter_comment=value
+                break
+            }
+        }
+    }
 
     const saveResult =()=>{
-        if(resultOfFour==null){
+        if(resultOfFour==''){
             showEmpty()
             return ;
         }
-        if(resultOfFour===''){
+        if(resultComment===''){
             showEmpty()
 
             return;
         }
 
-        let remainingParams = testParams.filter(item => item.parameter_name !==paramerSelected.parameter_name)
-       
-        let resultParameters = []
-        paramerSelected.parameter_result=resultOfFour
-        paramerSelected.parameter_comment=resultComment
-        
-        resultParameters.push(paramerSelected)
-       
-        
-        let testParamsToSave =  remainingParams.concat(resultParameters)
-        console.log(testParamsToSave)
 
         fetch(urlConnection(`add_parameter/${currentUser.user_id}`),{
             method:'POST',
@@ -106,7 +105,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
             },
             body:JSON.stringify({
                 cost:item.cost,
-                parameters:testParamsToSave,
+                parameters:testParams,
                 parameter_id:resultSelected.id,
                 request_id:item.order_id,
                 tecnichian:selectedStaff,
@@ -241,11 +240,10 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                                             keyboardType="numeric"
                                             height={55}
                                             placeholder={parameterValue(item)}
-                                            //  placeholder={}
                                             onChangeText={(e)=>{
                                                 setResultOfFour(e)
                                                 handleSelectedResult(item)
-                                                handleSelectedParam(item)
+                                                setValue(e,item.result_name)
                                             }}
 
                                        />
@@ -259,6 +257,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                                             placeholder='comment'
                                             onChangeText={(e)=>{
                                                 setResultComment(e)
+                                                setComment(e,item.result_name)
                                             }}
 
                                        />
