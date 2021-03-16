@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">clinicplus</string>
+    <string name ="default_notification_channel_id">clinic+</string>
 </resources>

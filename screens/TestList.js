@@ -7,22 +7,51 @@ import {setCurrentUser} from '../redux/user/userActions'
 import Feather from 'react-native-vector-icons/Feather'
 import Loading from 'react-native-whc-loading'
 import {urlConnection} from '../url'
-
-
+import PushNotification from 'react-native-push-notification'
 
 const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
+    const [notificationCount, setNotificationCount] = useState(0)
+
     const [tests, setTests] = useState([])
     const [showProfile, setShowProfile] = useState(false)
-
+    
     const capitalize = (name)=>{
         return name.charAt(0).toUpperCase()+name.slice(1)
     }
-
+    
     const id = currentUser.user_id;
-
+    
+    
     const loading = useRef(null)
     const [isLoading, setIsloading] = useState(false)
+    
+    setInterval(() => {
+        
+        // fetch(urlConnection(`notifications/${id}`))
+        // .then(res => res.json())
+        // .then(res=> {
+        //     if(res.length > notificationCount){
+        //         setNotificationCount(res.length)
+
+        //         PushNotification.localNotification({
+        //             channelId:'clinic+',
+        //             title:'Lab Test',
+        //             id:1,
+        //             message:'New Patient Added'
+        //         })
+        //     }
+        // })
+        // .catch(err=>console.log(err))   
+
+        fetch(urlConnection(`update_count/${id}`))
+        .then(res => res.json())
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+
+    },15000);
+
+   
 
 
     useEffect(() => {
@@ -49,14 +78,16 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             return ()=>{
                 setShowProfile(false)
             }
-    }, [pendingTests])
+    }, [pendingTests,notificationCount])
 
     useEffect(() => {
         return () => {
             loading.current.close()
+            clearInterval()
 
         }
     }, [])
+
     const logOut =()=>{
         loading.current.show()
         setTimeout(()=>{
@@ -65,6 +96,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
         },1000)
     }
+
     
     return (
         
@@ -73,8 +105,15 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             <View style={{width:'100%',height:40, backgroundColor:'#92D1C6',justifyContent:'center'}}>
                 <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',paddingHorizontal:5,paddingVertical:5}}>
                 <TouchableOpacity 
+                onPress={()=>PushNotification.cancelLocalNotifications({id:1})}
                 style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
                 >
+                 <Feather name='bell' color={notificationCount?'red':'blue'} backgroundColor='red' size={24} />
+                 {
+                     tests.length>0&&(
+                        <Text style={{position:'absolute',color:'#fff',fontWeight:'bold',top:-5,right:2}}>{notificationCount ?notificationCount:null}</Text>
+                     ) 
+                 }
                 </TouchableOpacity>
 
                 <Text style={{fontSize:18,fontWeight:'bold',color:'#fff'}}>{currentUser.clinicName ?currentUser.clinicName.toUpperCase(): null}</Text>

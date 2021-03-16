@@ -1,6 +1,7 @@
 package com.clinicplusv2;
 
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           new SplashScreenReactPackage();
+           new ReactNativePushNotificationPackage();
 
           return packages;
         }
