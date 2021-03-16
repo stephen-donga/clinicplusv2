@@ -15,7 +15,7 @@ const Login = ({setLoggedInUser,navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [emailChecking,setEmailChecking] = useState('')
-    const [ loginMsg,setLoginMsg] = useState('')
+    const [loginMsg,setLoginMsg] = useState('')
 
     const [loading, setLoading] = useState(false)
 

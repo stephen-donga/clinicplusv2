@@ -8,50 +8,84 @@ import Feather from 'react-native-vector-icons/Feather'
 import Loading from 'react-native-whc-loading'
 import {urlConnection} from '../url'
 import PushNotification from 'react-native-push-notification'
+import SoundPlayer from 'react-native-sound-player'
+import Modal from 'react-native-modal';
+
+
 
 const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
-    const [notificationCount, setNotificationCount] = useState(0)
-
+    const [notificationCount, setNotificationCount] = useState([])
+    
+    const loading = useRef(null)
     const [tests, setTests] = useState([])
     const [showProfile, setShowProfile] = useState(false)
+    const [isLoading, setIsloading] = useState(false)
+    const [counter, setCounter] = useState(0)
     
     const capitalize = (name)=>{
         return name.charAt(0).toUpperCase()+name.slice(1)
     }
     
     const id = currentUser.user_id;
+
+
+    //notifications section
+    let notificationsCount=0
+    let varyingnotificationCounter=0
     
-    
-    const loading = useRef(null)
-    const [isLoading, setIsloading] = useState(false)
-    
-    setInterval(() => {
+    const notificationValidator = async() =>{
+        if(varyingnotificationCounter > notificationsCount){
+            PushNotification.localNotification({
+            channelId:'clinic+',
+            id:1,
+            title: "New test requests",
+            message: `Added ${varyingnotificationCounter} test requests`,
+            soundName:'tone.mp3'
+        })
+            try{
+            SoundPlayer.playSoundFile('tone','mp3')
+                console.log('playing...')
+            }catch(err){
+                console.log('cannot play sound')
+            }
+            notificationsCount = varyingnotificationCounter;
+
+        }
         
-        // fetch(urlConnection(`notifications/${id}`))
-        // .then(res => res.json())
-        // .then(res=> {
-        //     if(res.length > notificationCount){
-        //         setNotificationCount(res.length)
+    }
 
-        //         PushNotification.localNotification({
-        //             channelId:'clinic+',
-        //             title:'Lab Test',
-        //             id:1,
-        //             message:'New Patient Added'
-        //         })
-        //     }
-        // })
-        // .catch(err=>console.log(err))   
+    const fetchNotifications = ()=>{
+            fetch(urlConnection(`notifications/${id}`))
+            .then(res => res.json())
+            .then(res=> null)
+            .catch(err=>console.log(err))
+    }
 
-        fetch(urlConnection(`update_count/${id}`))
-        .then(res => res.json())
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
 
-    },15000);
+    
+    useEffect(() => {
 
-   
+        setInterval(async() => {
+         
+
+            fetch(urlConnection(`nitify_count/${id}`))
+            .then(res => res.json())
+            .then(res => {
+                varyingnotificationCounter = res;
+                notificationValidator()
+                setCounter(res)
+                fetchNotifications()
+
+            })
+            .catch(err=>console.log(err))
+
+        },15000);
+    
+        
+        return () => {
+        }
+    }, [])
 
 
     useEffect(() => {
@@ -77,16 +111,23 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             } )
             return ()=>{
                 setShowProfile(false)
+                loading.current.close()
+                clearInterval()
             }
-    }, [pendingTests,notificationCount])
+    }, [pendingTests])
 
-    useEffect(() => {
-        return () => {
-            loading.current.close()
-            clearInterval()
+    const onNotificationCheck =()=>{
+        fetch(urlConnection(`update_count/${id}`))
+        .then(res => res.json())
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
 
-        }
-    }, [])
+        //reseting notification validation values 
+        setCounter(0)
+        notificationsCount =0
+        varyingnotificationCounter=0
+        
+    }
 
     const logOut =()=>{
         loading.current.show()
@@ -104,16 +145,17 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             
             <View style={{width:'100%',height:40, backgroundColor:'#92D1C6',justifyContent:'center'}}>
                 <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',paddingHorizontal:5,paddingVertical:5}}>
+               
                 <TouchableOpacity 
-                onPress={()=>PushNotification.cancelLocalNotifications({id:1})}
+
+                onPress= {onNotificationCheck}
+
                 style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
                 >
-                 <Feather name='bell' color={notificationCount?'red':'blue'} backgroundColor='red' size={24} />
-                 {
-                     tests.length>0&&(
-                        <Text style={{position:'absolute',color:'#fff',fontWeight:'bold',top:-5,right:2}}>{notificationCount ?notificationCount:null}</Text>
-                     ) 
-                 }
+                 <Feather name='bell' color={counter?'red':'blue'} backgroundColor='red' size={24} />
+                 
+                        <Text style={{position:'absolute',color:'#fff',fontWeight:'bold',top:-5,right:2}}>{counter ?counter:null}</Text>
+                    
                 </TouchableOpacity>
 
                 <Text style={{fontSize:18,fontWeight:'bold',color:'#fff'}}>{currentUser.clinicName ?currentUser.clinicName.toUpperCase(): null}</Text>
@@ -128,9 +170,6 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
             </View>
             <Loading ref={loading}/>
-
-            
-           
             {
                 tests.length < 1 && !isLoading? 
                    (
@@ -173,6 +212,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                )}
 
             />
+         
             {
                 showProfile&&(
                     <View style={{position:'absolute',width:'60%',padding:10,top:60,right:15,elevation:3,backgroundColor:'#eee'}}>
