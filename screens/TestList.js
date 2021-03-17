@@ -9,13 +9,10 @@ import Loading from 'react-native-whc-loading'
 import {urlConnection} from '../url'
 import PushNotification from 'react-native-push-notification'
 import SoundPlayer from 'react-native-sound-player'
-import Modal from 'react-native-modal';
 
 
 
 const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
-
-    const [notificationCount, setNotificationCount] = useState([])
     
     const loading = useRef(null)
     const [tests, setTests] = useState([])
@@ -55,27 +52,38 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
         
     }
 
-    const fetchNotifications = ()=>{
-            fetch(urlConnection(`notifications/${id}`))
-            .then(res => res.json())
-            .then(res=> null)
-            .catch(err=>console.log(err))
+    const fetchPendingTests = ()=>{
+        fetch(urlConnection(`pending/${id}`),{
+            method:'GET',
+            headers:{
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(res =>{
+            pendingTests(res)
+            setIsloading(false)
+            setTimeout(()=>{
+                setTests(res)
+            },300)
+        })
+        .catch(err =>{
+            console.log(err)
+            setIsloading(false)
+        } )
     }
-
 
     
     useEffect(() => {
 
         setInterval(async() => {
-         
-
             fetch(urlConnection(`nitify_count/${id}`))
             .then(res => res.json())
             .then(res => {
                 varyingnotificationCounter = res;
                 notificationValidator()
                 setCounter(res)
-                fetchNotifications()
 
             })
             .catch(err=>console.log(err))
@@ -90,31 +98,13 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
 
     useEffect(() => {
             setIsloading(true)
-            fetch(urlConnection(`pending/${id}`),{
-                method:'GET',
-                headers:{
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(res => res.json())
-            .then(res =>{
-                pendingTests(res)
-                setIsloading(false)
-                setTimeout(()=>{
-                    setTests(res)
-                },300)
-            })
-            .catch(err =>{
-                console.log(err)
-                setIsloading(false)
-            } )
+            fetchPendingTests()
             return ()=>{
                 setShowProfile(false)
                 loading.current.close()
                 clearInterval()
             }
-    }, [pendingTests])
+    }, [pendingTests,counter])
 
     const onNotificationCheck =()=>{
         fetch(urlConnection(`update_count/${id}`))
@@ -148,7 +138,10 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                
                 <TouchableOpacity 
 
-                onPress= {onNotificationCheck}
+                onPress= {()=>{
+                    onNotificationCheck()
+                    navigation.navigate('Notifications',id)
+                }}
 
                 style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
                 >

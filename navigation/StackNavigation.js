@@ -8,6 +8,7 @@ import Test from '../screens/Test'
 import ResultFour from '../screens/ResultFourType'
 import ResultOne from '../screens/ResultOne'
 import UserProfile from '../screens/UserProfile'
+import Notifications from '../screens/Notifications'
 
 const Stack = createStackNavigator()
 
@@ -23,6 +24,7 @@ const StackNavigation = ({currentUser}) => {
              <Stack.Screen name='ResultFour' component={ResultFour} />
              <Stack.Screen name ='ResultOne' component={ResultOne} />
              <Stack.Screen name='UserProfile' component={UserProfile} />
+             <Stack.Screen name='Notifications' component={Notifications} />
          </Stack.Navigator>
     )
 }
