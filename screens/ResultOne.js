@@ -131,7 +131,7 @@ const ResultOne = ({currentUser,staff,route, navigation}) => {
                 >
                 <AntDesign name='arrowleft' size={21} style={{paddingLeft:10,color:'#fff'}} />
                 </TouchableOpacity>
-                <Text style={{fontSize:17,marginLeft:-20,color:'#fff',fontWeight:'bold'}}>{selected.toUpperCase()}</Text>
+                <Text style={{fontSize:15,marginLeft:-20,color:'#fff',fontWeight:'bold'}}>{selected.toUpperCase()}</Text>
                 <Text></Text>
             </View>
              <View style={{width:'100%',padding:10, height:"100%",backgroundColor:'#fff'}}>

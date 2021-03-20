@@ -33,11 +33,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
     const selected = item.test
 
   
-
-    const parameterValue =(val)=>{
-        let value = testParams.find(item =>item.parameter_name === val.result_name)
-        return value.parameter_result
-    }
+ 
 
     const showToastWithGravity = () => {
         ToastAndroid.showWithGravity(
@@ -68,10 +64,11 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
       }
 
       const setValue = (value, result_name) =>{
+          console.log(value)
           for(let i in testParams){
               if(testParams[i].parameter_name===result_name){
                   testParams[i].parameter_result=value
-                  break
+                  break;
               }
           }
       }
@@ -80,22 +77,16 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
         for(let i in testParams){
             if(testParams[i].parameter_name === result_name){
                 testParams[i].parameter_comment=value
-                break
+                break;
             }
         }
     }
 
     const saveResult =()=>{
-        if(resultOfFour==''){
+        if(resultOfFour ==''){
             showEmpty()
             return ;
         }
-        if(resultComment===''){
-            showEmpty()
-
-            return;
-        }
-
 
         fetch(urlConnection(`add_parameter/${currentUser.user_id}`),{
             method:'POST',
@@ -175,7 +166,7 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                 >
                 <AntDesign name='arrowleft' size={21} style={{paddingLeft:10,color:'#fff'}} />
                 </TouchableOpacity>
-                <Text style={{fontSize:17,color:'#fff',fontWeight:'bold'}}>{selected.toUpperCase()}</Text>
+                <Text style={{fontSize:15,color:'#fff',fontWeight:'bold'}}>{selected.toUpperCase()}</Text>
                 <Text></Text>
             </View>
             <View style={{flex:1,padding:10,backgroundColor:'#fff'}}>
@@ -239,12 +230,12 @@ const ResultFourType = ({staffList,currentUser,route, navigation}) => {
                                             style={{width:'90%',borderWidth:1,textAlign:'center'}}
                                             keyboardType="numeric"
                                             height={55}
-                                            placeholder={parameterValue(item)}
                                             onChangeText={(e)=>{
                                                 setResultOfFour(e)
                                                 handleSelectedResult(item)
                                                 setValue(e,item.result_name)
                                             }}
+                                            
 
                                        />
                                   </View>

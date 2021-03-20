@@ -20,7 +20,7 @@ const UserProfile = ({currentUser,navigation}) => {
                 >
                 <AntDesign name='arrowleft' size={21} style={{paddingLeft:10,color:'#fff'}} />
                 </TouchableOpacity>
-                <Text style={{fontSize:17,color:'#fff',fontWeight:'bold'}}>User Profile</Text>
+                <Text style={{fontSize:17,color:'#fff',marginLeft:-35,fontWeight:'bold'}}>User Profile</Text>
                 <Text></Text>
             </View>
             <View style={{width:'100%',height:'30%',backgroundColor:'#92D1C6',justifyContent:'center',alignItems:'center'}}>

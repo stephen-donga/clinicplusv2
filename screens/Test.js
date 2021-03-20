@@ -20,8 +20,10 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
        
             if(item.result_type ==='4'){
                 navigation.navigate('ResultFour',item)
-            }else{
+            }else if(item.result_type ==='1'){
                 navigation.navigate('ResultOne',item)
+            }else{
+                navigation.navigate('ResultCommentEntry',item)
             }
          
         let id = currentUser.user_id
@@ -89,7 +91,7 @@ const Test = ({setStaffLst, currentUser, route, navigation}) => {
                                     handleTestRequest(item)
                                 }} 
                                 >
-                              <AntDesign name={checkIfResultType(item)}  color='#10093E' size={24} />
+                              <AntDesign name='plussquare'  color='#10093E' size={24} />
                               </TouchableOpacity>
                         </View>
                         </TouchableOpacity>

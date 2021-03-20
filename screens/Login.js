@@ -1,4 +1,4 @@
-import React,{useState, useEffect, useRef} from 'react'
+import React,{useState, useEffect } from 'react'
 import { View,ScrollView,Image,ActivityIndicator, Text, TouchableOpacity,TextInput } from 'react-native'
 import Modal from 'react-native-modal';
 
@@ -16,11 +16,8 @@ const Login = ({setLoggedInUser,navigation}) => {
     const [password, setPassword] = useState('')
     const [emailChecking,setEmailChecking] = useState('')
     const [loginMsg,setLoginMsg] = useState('')
-
     const [loading, setLoading] = useState(false)
-
     const [isModalVisible, setIsModalVisible] = useState(false)
-
     const [emailErrorMessage, setEmailErrorMessage] = useState("")
     const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
 
@@ -48,9 +45,9 @@ const Login = ({setLoggedInUser,navigation}) => {
             }else if(res.user_id){
                 setEmail("")
                 setPassword("")
-                setLoggedInUser(res)
                 setEmailErrorMessage("")
                 setPasswordErrorMessage("")
+                setLoggedInUser(res)
                 navigation.navigate('TestList')
 
             }else{

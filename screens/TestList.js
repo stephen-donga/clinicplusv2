@@ -77,8 +77,14 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
     
     useEffect(() => {
 
-        setInterval(async() => {
-            fetch(urlConnection(`nitify_count/${id}`))
+        setInterval(() => {
+            fetch(urlConnection(`nitify_count/${id}`),{
+                method:'GET',
+                headers:{
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                }
+            })
             .then(res => res.json())
             .then(res => {
                 varyingnotificationCounter = res;
@@ -92,6 +98,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
     
         
         return () => {
+            onNotificationCheck
         }
     }, [])
 
@@ -106,8 +113,15 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
             }
     }, [pendingTests,counter])
 
-    const onNotificationCheck =()=>{
-        fetch(urlConnection(`update_count/${id}`))
+    function onNotificationCheck (){
+        fetch(urlConnection(`update_count/${id}`),{
+            method:'POST',
+            headers:{
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body:id
+        })
         .then(res => res.json())
         .then(res => console.log(res))
         .catch(err => console.log(err))
@@ -139,19 +153,19 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                 <TouchableOpacity 
 
                 onPress= {()=>{
-                    onNotificationCheck()
+                    counter ? onNotificationCheck():null
                     navigation.navigate('Notifications',id)
                 }}
 
                 style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
                 >
-                 <Feather name='bell' color={counter?'red':'blue'} backgroundColor='red' size={24} />
+                 <Feather name='bell' color={counter?'red':'#10093E'} backgroundColor='red' size={24} />
                  
                         <Text style={{position:'absolute',color:'#fff',fontWeight:'bold',top:-5,right:2}}>{counter ?counter:null}</Text>
                     
                 </TouchableOpacity>
 
-                <Text style={{fontSize:18,fontWeight:'bold',color:'#fff'}}>{currentUser.clinicName ?currentUser.clinicName.toUpperCase(): null}</Text>
+                <Text style={{fontSize:15,top:5,fontWeight:'bold',color:'#fff'}}>{currentUser.clinicName ?currentUser.clinicName.toUpperCase(): null}</Text>
                 <TouchableOpacity 
                 onPress={()=>setShowProfile(!showProfile)}
                 style={{width:30,height:30,borderRadius:15,alignItems:'center',justifyContent:'center'}}
