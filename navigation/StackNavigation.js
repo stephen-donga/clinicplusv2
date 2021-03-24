@@ -10,6 +10,7 @@ import ResultOne from '../screens/ResultOne'
 import UserProfile from '../screens/UserProfile'
 import Notifications from '../screens/Notifications'
 import ResultCommenEntry from '../screens/ResultCommenEntry'
+import ResetPassword from '../screens/ResetPassword'
 
 const Stack = createStackNavigator()
 
@@ -26,6 +27,7 @@ const StackNavigation = ({currentUser}) => {
              <Stack.Screen name ='ResultOne' component={ResultOne} />
              <Stack.Screen name='UserProfile' component={UserProfile} />
              <Stack.Screen name='Notifications' component={Notifications} />
+             <Stack.Screen name='ChangePassword' component={ResetPassword} />
              <Stack.Screen name='ResultCommentEntry' component={ResultCommenEntry} />
          </Stack.Navigator>
     )

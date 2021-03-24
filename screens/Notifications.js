@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import { View,FlatList,ActivityIndicator, Text,Dimensions,TouchableOpacity,} from 'react-native'
+import { View,FlatList,ActivityIndicator,Text,Dimensions,TouchableOpacity,} from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import {urlConnection} from '../url'
 

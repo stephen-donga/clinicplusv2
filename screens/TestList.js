@@ -90,6 +90,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                 varyingnotificationCounter = res;
                 notificationValidator()
                 setCounter(res)
+                console.log(res)
 
             })
             .catch(err=>console.log(err))
@@ -161,7 +162,7 @@ const TestList = ({currentUser,setUser,pendingTests,navigation}) => {
                 >
                  <Feather name='bell' color={counter?'red':'#10093E'} backgroundColor='red' size={24} />
                  
-                        <Text style={{position:'absolute',color:'#fff',fontWeight:'bold',top:-5,right:2}}>{counter ?counter:null}</Text>
+                    <Text style={{position:'absolute',color:'#fff',fontWeight:'bold',top:-5,right:2}}>{counter ?counter:null}</Text>
                     
                 </TouchableOpacity>
 
@@ -263,7 +264,7 @@ const mapStateToProps = ({user,test})=>({
     currentUser: user.currentUser,
 })
 
-const mapDispatchToProps = dispatch =>({
+const mapDispatchToProps = dispatch => ({
     pendingTests: list =>dispatch(setTestList(list)),
     setUser: action =>dispatch(setCurrentUser(action))
 })

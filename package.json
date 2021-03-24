@@ -18,6 +18,7 @@
     "fetch": "^1.1.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-confirmation-code-field": "^7.0.0",
     "react-native-dropdown-picker": "^4.0.2",
     "react-native-gesture-handler": "^1.10.2",
     "react-native-modal": "^11.7.0",
